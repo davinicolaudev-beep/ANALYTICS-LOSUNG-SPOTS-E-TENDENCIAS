@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net (Default-Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Validation helper for Shopee Route schema
+    function isValidShopeeRoute(data) {
+      return data.keys().hasAll(['routeCode', 'type', 'status', 'cancelled', 'syncedAt'])
+        && data.routeCode is string && data.routeCode.size() <= 128
+        && data.type is string && (data.type == 'SPOT' || data.type == 'TENDENCIA' || data.type == 'OUTRO')
+        && data.status is string && (data.status == 'ACEITAMOS' || data.status == 'PERDEMOS' || data.status == 'OUTRO')
+        && data.cancelled is bool
+        && data.syncedAt is string && data.syncedAt.size() <= 64;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Shopee Routes Collection
+    match /shopee_routes/{routeId} {
+      // Allow reading/listing all routes if requested
+      allow read: if true;
+
+      // Allow write if the route ID is valid and payload matches the schema
+      allow create, update: if isValidId(routeId) && isValidShopeeRoute(request.resource.data);
+      
+      // Allow delete for administrators or database resets
+      allow delete: if true;
+    }
+  }
+}

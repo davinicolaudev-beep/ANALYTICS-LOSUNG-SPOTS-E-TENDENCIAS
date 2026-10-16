@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "shopee_route": {
+      "title": "Shopee Route Record",
+      "description": "Spot and Trend route KPIs imported for Shopee",
+      "type": "object",
+      "properties": {
+        "week": { "type": "string", "description": "The target week of the route, e.g., W34" },
+        "creationDate": { "type": "string", "description": "Creation date of the route" },
+        "routeCode": { "type": "string", "description": "CPF da Rota, unique key identifier" },
+        "type": { "type": "string", "enum": ["SPOT", "TENDENCIA", "OUTRO"], "description": "Route type definition" },
+        "status": { "type": "string", "enum": ["ACEITAMOS", "PERDEMOS", "OUTRO"], "description": "Our negotiation status" },
+        "cancelled": { "type": "boolean", "description": "Whether the route was cancelled" },
+        "routeOrigin": { "type": "string", "description": "Origin hub" },
+        "routeDest": { "type": "string", "description": "Destination hub" },
+        "routeComplete": { "type": "string", "description": "Formatted origin ➔ destination string" },
+        "syncedAt": { "type": "string", "format": "date-time", "description": "Timestamp when synced" }
+      },
+      "required": ["routeCode", "type", "status", "cancelled", "syncedAt"]
+    }
+  },
+  "firestore": {
+    "shopee_routes/{routeCode}": {
+      "schema": "shopee_route",
+      "description": "Collection of synced Shopee route performance records"
+    }
+  }
+}

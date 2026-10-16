@@ -1,0 +1,8 @@
+{
+  "name": "KPI Analytics",
+  "description": "Sistema de avaliação de KPIs da Lösung Express para Shopee, Amazon e Mercado Livre.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
